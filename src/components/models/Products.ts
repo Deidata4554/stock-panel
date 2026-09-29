@@ -1,11 +1,15 @@
 import type { IProduct } from '../../types';
+import type { IEvents } from '../base/Events';
 
 export class Products {
 
   protected items: IProduct[] = [];
 
+  constructor(protected events: IEvents) { }
+
   setItems(items: IProduct[]): void {
     this.items = items;
+    this.events.emit('catalog:changed');
   }
 
   getItems(): IProduct[] {
@@ -26,6 +30,8 @@ export class Products {
       console.log('Количество должно быть положительным целым числом');
       return;
     }
+    item.stock += amount;
+    this.events.emit('catalog:changed');
   }
 
   getOutOfStock(): IProduct[] {
